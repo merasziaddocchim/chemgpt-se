@@ -2,7 +2,6 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from aizynthfinder.aizynthfinder import AiZynthFinder
 from aizynthfinder.context.config import Configuration
-import os
 
 app = FastAPI()
 
@@ -16,12 +15,7 @@ app.add_middleware(
 # ===============================
 # AiZynthFinder Model: Load Once
 # ===============================
-CONFIG_URL = "https://raw.githubusercontent.com/MolecularAI/aizynthfinder/master/configs/config.yml"
 CONFIG_PATH = "config.yml"
-if not os.path.exists(CONFIG_PATH):
-    import urllib.request
-    urllib.request.urlretrieve(CONFIG_URL, CONFIG_PATH)
-
 finder = AiZynthFinder(Configuration(CONFIG_PATH))
 
 @app.get("/")
@@ -36,12 +30,11 @@ async def retrosynthesis(req: Request):
         return {"result": "⚠️ No SMILES provided."}
     try:
         finder.target_smiles = [smiles]
-        finder.prepare()
+        finder.prepare()   # Only needed if your AiZynthFinder version requires it; can omit if not.
         finder.run()
         if finder.routes:
             best_route = finder.routes[0]
-            # Returns a readable text version of the route
-            result_str = best_route.to_string()
+            result_str = best_route.to_string()  # Use .to_str() or .to_string() as your version supports.
             return {"result": result_str}
         else:
             return {"result": "❌ No synthesis route found."}
