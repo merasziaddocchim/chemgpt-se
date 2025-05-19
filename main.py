@@ -1,5 +1,8 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from aizynthfinder.aizynthfinder import AiZynthFinder
+from aizynthfinder.context.config import Configuration
+import os
 
 app = FastAPI()
 
@@ -9,6 +12,17 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# ===============================
+# AiZynthFinder Model: Load Once
+# ===============================
+CONFIG_URL = "https://raw.githubusercontent.com/MolecularAI/aizynthfinder/master/configs/config.yml"
+CONFIG_PATH = "config.yml"
+if not os.path.exists(CONFIG_PATH):
+    import urllib.request
+    urllib.request.urlretrieve(CONFIG_URL, CONFIG_PATH)
+
+finder = AiZynthFinder(Configuration(CONFIG_PATH))
 
 @app.get("/")
 def root():
@@ -20,8 +34,19 @@ async def retrosynthesis(req: Request):
     smiles = data.get("smiles")
     if not smiles:
         return {"result": "⚠️ No SMILES provided."}
-    # TODO: Plug in AiZynthFinder here
-    return {"result": f"Pretend prediction for {smiles} (AiZynth to be connected)"}
+    try:
+        finder.target_smiles = [smiles]
+        finder.prepare()
+        finder.run()
+        if finder.routes:
+            best_route = finder.routes[0]
+            # Returns a readable text version of the route
+            result_str = best_route.to_string()
+            return {"result": result_str}
+        else:
+            return {"result": "❌ No synthesis route found."}
+    except Exception as e:
+        return {"result": f"Error: {str(e)}"}
 
 if __name__ == "__main__":
     import uvicorn
