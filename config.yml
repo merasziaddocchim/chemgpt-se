@@ -1,0 +1,6 @@
+expansion:
+  full:
+    - uspto_model.onnx
+    - uspto_templates.csv.gz
+stock:
+  zinc: zinc_stock.hdf5
