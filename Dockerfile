@@ -24,7 +24,6 @@ ENV PATH=/opt/conda/bin:$PATH
 RUN conda create -n chemgpt-se python=3.10 rdkit=2023.03.2 -c conda-forge && \
     /opt/conda/bin/conda run -n chemgpt-se pip install fastapi uvicorn aizynthfinder==4.3.2
 
-
 # Set environment variables
 ENV CONDA_DEFAULT_ENV=chemgpt-se
 
@@ -35,5 +34,5 @@ COPY . .
 # Expose port
 EXPOSE 10000
 
-# Run app
-CMD ["/opt/conda/bin/conda", "run", "-n", "chemgpt-se", "python", "main.py"]
+# Run app (NEW LINE!)
+CMD ["python", "main.py"]
