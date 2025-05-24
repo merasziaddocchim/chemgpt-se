@@ -2,10 +2,11 @@ import os
 import urllib.request
 
 MODEL_FILES = {
-    "uspto_model.onnx": "https://zenodo.org/record/7797465/files/uspto_model.onnx?download=1",
-    "uspto_templates.csv.gz": "https://zenodo.org/record/7797465/files/uspto_templates.csv.gz?download=1",
+    "uspto_model.onnx": "https://zenodo.org/record/11430881/files/uspto_model.onnx?download=1",
+    "uspto_templates.csv.gz": "https://zenodo.org/record/7341155/files/uspto_templates.csv.gz?download=1",
     "zinc_stock.hdf5": "https://figshare.com/ndownloader/files/22348896"
 }
+
 
 def ensure_models():
     os.makedirs("models", exist_ok=True)
