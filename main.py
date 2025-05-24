@@ -1,4 +1,8 @@
 from fastapi import FastAPI, Request
+from download_models import ensure_models
+
+ensure_models()
+
 from fastapi.middleware.cors import CORSMiddleware
 from aizynthfinder.aizynthfinder import AiZynthFinder
 import os
