@@ -30,6 +30,8 @@ ENV CONDA_DEFAULT_ENV=chemgpt-se
 WORKDIR /app
 COPY . .
 
-EXPOSE 10000
+# 🔥 Expose port 8000 (to match Railway)
+EXPOSE 8000
 
-CMD ["/opt/conda/bin/conda", "run", "-n", "chemgpt-se", "python", "main.py"]
+# 🔥 Run with Uvicorn on port 8000 (matches FastAPI & Railway)
+CMD ["/opt/conda/bin/conda", "run", "-n", "chemgpt-se", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
